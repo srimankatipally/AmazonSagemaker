@@ -1,6 +1,14 @@
 # ─── 0. (Optional) install/upgrade dependencies ─────────────────────────
 # !pip install --upgrade sagemaker transformers
-
+'''
+Install AWS console
+Get Creds from IAM 
+Set Cred in AWS by Export
+Like This
+export AWS_ACCESS_KEY_ID=AKIA…YOURNEWKEY
+export AWS_SECRET_ACCESS_KEY=…YOURNEWSECRET
+export AWS_DEFAULT_REGION=us-east-1
+'''
 # ─── 1. Imports & Session Setup ────────────────────────────────────────
 import sagemaker
 from sagemaker import get_execution_role
