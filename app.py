@@ -41,21 +41,29 @@ print(f"Endpoint '{endpoint_name}' is in service!")
 
 # ─── 5. Invoke the endpoint ───────────────────────────────────────────
 # (a) via the SageMaker Predictor
-texts = ["The quick brown fox jumps over the lazy dog.",
-         "SageMaker + HuggingFace FTW!"]
-embeddings = predictor.predict(texts)
+# texts = ["The quick brown fox jumps over the lazy dog.",
+#          "SageMaker + HuggingFace FTW!"]
+# embeddings = predictor.predict(texts)
+# print("First vector (truncated):", embeddings[0][:8])
+
+# # (b) or via the low-level Runtime API
+# sm_rt = boto3.client("sagemaker-runtime")
+# resp = sm_rt.invoke_endpoint(
+#     EndpointName=endpoint_name,
+#     ContentType="application/json",
+#     Body=json.dumps(texts),
+# )
+# rt_emb = json.loads(resp["Body"].read().decode())
+# print("RT vector (truncated):", rt_emb[0][:8])
+texts = [
+    "The quick brown fox jumps over the lazy dog.",
+    "SageMaker + HuggingFace FTW!"
+]
+# wrap in {"inputs": …}
+payload = {"inputs": texts}
+
+embeddings = predictor.predict(payload)
 print("First vector (truncated):", embeddings[0][:8])
-
-# (b) or via the low-level Runtime API
-sm_rt = boto3.client("sagemaker-runtime")
-resp = sm_rt.invoke_endpoint(
-    EndpointName=endpoint_name,
-    ContentType="application/json",
-    Body=json.dumps(texts),
-)
-rt_emb = json.loads(resp["Body"].read().decode())
-print("RT vector (truncated):", rt_emb[0][:8])
-
 # ─── 6. (Optional) Clean up ────────────────────────────────────────────
 predictor.delete_endpoint()
 
