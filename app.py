@@ -7,10 +7,17 @@ from sagemaker import get_execution_role
 from sagemaker.huggingface import HuggingFaceModel
 import boto3
 import json
+# create a boto3 session from a named profile
+boto_session = boto3.Session(region_name="us-east-1")
 
+# pass that into SageMaker
+sagemaker_session = sagemaker.Session(boto_session=boto_session)
+#role = get_execution_role()  # still needs a valid SageMaker execution-role ARN
+execution_role = "arn:aws:iam::601136796356:role/MySageMakerExecutionRole"
+#arn:aws:iam::601136796356:role/MySageMakerExecutionRole
 # SageMaker session & role (auto-detects the notebook/job role)
 sagemaker_session = sagemaker.Session()
-role = get_execution_role()  # must match the assumed role exactly
+role = execution_role  # must match the assumed role exactly
 
 # ─── 2. HF Hub Configuration ───────────────────────────────────────────
 hub = {
@@ -27,6 +34,7 @@ hf_model = HuggingFaceModel(
     py_version="py310",
     sagemaker_session=sagemaker_session,
 )
+
 
 # ─── 4. Deploy to an endpoint ──────────────────────────────────────────
 endpoint_name = "qwen2-embedding-endpoint"
